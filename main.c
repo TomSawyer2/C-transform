@@ -5,13 +5,13 @@
 #include "isletter.h"
 #include "isdigit.h"
 #include "binary.h"
-//保留字表1-10
-char keywords[15][10]={"int","float","double","break","else","char","return","continue","for","if","while","void"};   //int是1 
-//分隔符表11-23
-char delimiters[20][5]={"=","+","&","*","**",",",";","(",")","{","}","<",">","#","."};   //=是11
-//标识符表24
+//保留字表
+char keywords[15][12]={"int","float","double","break","else","char","return","continue","for","if","while","void"};    
+//分隔符表
+char delimiters[20][5]={"=","+","-","&","*","**",",",";","(",")","{","}","<",">","#","[","]","."};   
+//标识符表
 char id[50][30]={""};    
-//常数表25
+//常数表
 int digitals[100]={};
 //sp1->.h,sp2->() 
 int i;
@@ -21,7 +21,7 @@ int main(void){
 
     FILE *file,*file1;
     file1=fopen("词法分析器（结果）.txt","w");
-    char string[100];
+    char string[300];
     int j0,k0=0;
     file=fopen("词法分析器.txt","r");//打开文件 
     char ch0;
@@ -29,12 +29,13 @@ int main(void){
         string[k0++]=ch0;
     }
     string[k0]='\0';
-    char str[100]={};
+    char str[300]={};
     strcpy(str,string);
     str[k0]='\0';
 
     char ch;
     int length=getLength(str);
+    printf("length=%d",length);
     printf("成功，请前往文件:词法分析器（结果）.txt中查看！"); 
     fprintf(file1,"类别码  值\n");                                                                                       
     for(i=0;i<length;i++){
@@ -45,14 +46,14 @@ int main(void){
         else if(IsLetter(ch)){      //第一位为字母 
             while((IsLetter(ch) || IsDigit(ch)) && i<length){
                 Concat(getLength(strToken),strToken,ch);      //将ch连接在strToken后面 
-                i=i+1;     //指针向后移一位 
+                i++;     //指针向后移一位 
                 ch=str[i];   //ch变为下一个ch 
             }
             i=i-1;   //指针向前移一位 
             int keyword=IsKeyword(strToken);    //判断是否为保留字 
             if(keyword==0){      //为标识符 
                 InsertId(strToken);
-                fprintf(file1,"24   %s\n",strToken);      
+                fprintf(file1,"31   %s\n",strToken);      
             }
             else{       //为保留字 
                 fprintf(file1,"%d    %s\n",keyword,strToken); 
@@ -66,7 +67,7 @@ int main(void){
             }
             i=i-1;
             InsertDigit(Binary(atoi(strToken)));    //将strToken字符串转化为数字插入到常数表中 
-            fprintf(file1,"25   %d\n",atoi(strToken));
+            fprintf(file1,"32   %d\n",atoi(strToken));
         }
         else if(ch=='='){
             fprintf(file1,"%d    =\n",IsDelimiter(ch));
@@ -74,14 +75,17 @@ int main(void){
         else if(ch=='+'){
             fprintf(file1,"%d    +\n",IsDelimiter(ch));
         }
+        else if(ch=='-'){
+            fprintf(file1,"%d    -\n",IsDelimiter(ch));
+        }
         else if(ch=='*'){
             i=i+1;
             ch=str[i];
             if(ch=='*'){
-                fprintf(file1,"14   **\n");
+                fprintf(file1,"17   **\n");
 
             }else{
-                fprintf(file1,"13   *\n");
+                fprintf(file1,"16   *\n");
                 i=i-1;
             } 
         }
@@ -102,12 +106,18 @@ int main(void){
         else if(ch=='{'){
             fprintf(file1,"%d    {\n",IsDelimiter(ch));
         }
-        else if(ch=='&'){
-        	fprintf(file1,"%d    &\n",IsDelimiter(ch));
-		}
         else if(ch=='}'){
             fprintf(file1,"%d    }\n",IsDelimiter(ch));
         }
+        else if(ch=='&'){
+        	fprintf(file1,"%d    &\n",IsDelimiter(ch));
+		}
+        else if(ch=='['){
+        	fprintf(file1,"%d    [\n",IsDelimiter(ch));
+		}
+		else if(ch==']'){
+        	fprintf(file1,"%d    ]\n",IsDelimiter(ch));
+		}
         else if(ch=='>'){
             fprintf(file1,"%d    >\n",IsDelimiter(ch));
         }
@@ -148,10 +158,10 @@ int main(void){
 			 }
         }
         else if(ch=='"'){
-        	fprintf(file1,"26    \"\n");
+        	fprintf(file1,"33    \"\n");
 		}
 		else if(ch=='%'){
-			fprintf(file1,"27    %%\n");
+			fprintf(file1,"34    %%\n");
 		} 
         else{
             fprintf(file1,"错误！\n"); 
@@ -196,7 +206,7 @@ int IsDelimiter(char *ch){
     int h;
     for(h=0;h<20;h++){
         if(delimiters[h][0]==ch){
-            return h+11;     //若是保留字，则返回它的类别码 
+            return h+13;     //若是保留字，则返回它的类别码 
         }
     }
     return 0;

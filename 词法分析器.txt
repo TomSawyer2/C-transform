@@ -1,7 +1,8 @@
 #include <stdio.h>
-int main(){
-int a;/*a
-a
-a*/
-void;//aaaa
+int main(void){
+	char *month[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"};
+	int number;
+	scanf("%d",&number);
+	printf("%s",month[number-1]);
+	return 0;
 }
