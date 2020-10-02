@@ -35,7 +35,7 @@ int main(void){
 
     char ch;
     int length=getLength(str);
-    printf("length=%d",length);
+    //printf("length=%d",length);
     printf("成功，请前往文件:词法分析器（结果）.txt中查看！"); 
     fprintf(file1,"类别码  值\n");                                                                                       
     for(i=0;i<length;i++){
@@ -49,7 +49,7 @@ int main(void){
                 i++;     //指针向后移一位 
                 ch=str[i];   //ch变为下一个ch 
             }
-            i=i-1;   //指针向前移一位 
+            i--;   //指针向前移一位 
             int keyword=IsKeyword(strToken);    //判断是否为保留字 
             if(keyword==0){      //为标识符 
                 InsertId(strToken);
@@ -65,7 +65,7 @@ int main(void){
                 i=i+1;
                 ch=str[i];
             }
-            i=i-1;
+            i--;
             InsertDigit(Binary(atoi(strToken)));    //将strToken字符串转化为数字插入到常数表中 
             fprintf(file1,"32   %d\n",atoi(strToken));
         }
@@ -79,14 +79,14 @@ int main(void){
             fprintf(file1,"%d    -\n",IsDelimiter(ch));
         }
         else if(ch=='*'){
-            i=i+1;
+            i++;
             ch=str[i];
             if(ch=='*'){
                 fprintf(file1,"17   **\n");
 
             }else{
                 fprintf(file1,"16   *\n");
-                i=i-1;
+                i--;
             } 
         }
         else if(ch==';'){
