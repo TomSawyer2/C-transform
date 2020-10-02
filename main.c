@@ -13,11 +13,7 @@ char delimiters[20][5]={"=","+","&","*","**",",",";","(",")","{","}","<",">","#"
 char id[50][30]={""};    
 //常数表25
 int digitals[100]={};
-
-
-
-//int j=0;
-//int n=0;
+//sp1->.h,sp2->() 
 int i;
 int p=0,q=0;
 
@@ -33,22 +29,11 @@ int main(void){
         string[k0++]=ch0;
     }
     string[k0]='\0';
-//  printf("%s\n",string);
     char str[100]={};
     strcpy(str,string);
     str[k0]='\0';
-//  printf("%s\n",str);
 
-//  int w;
-//  for(w=0;w<100;w++){
-//      str[w]=getchar();
-//      if(str[w]=='~'){
-//          str[w]='\0';
-//          break;
-//      }
-//  }   
     char ch;
-
     int length=getLength(str);
     printf("成功，请前往文件:词法分析器（结果）.txt中查看！"); 
     fprintf(file1,"类别码  值\n");                                                                                       
@@ -56,28 +41,20 @@ int main(void){
         char strToken[]={""};
         ch=str[i];
         if(ch==' '|| ch=='\n' ||ch=='\t'){
-
         }
         else if(IsLetter(ch)){      //第一位为字母 
             while((IsLetter(ch) || IsDigit(ch)) && i<length){
                 Concat(getLength(strToken),strToken,ch);      //将ch连接在strToken后面 
-//              printf("%d  %s\n",i,strToken);
                 i=i+1;     //指针向后移一位 
                 ch=str[i];   //ch变为下一个ch 
             }
             i=i-1;   //指针向前移一位 
             int keyword=IsKeyword(strToken);    //判断是否为保留字 
-//          printf("%d",keyword);
             if(keyword==0){      //为标识符 
                 InsertId(strToken);
-//              printf("%s",id[0]);
-
-//              printf("24   %s\n",strToken);
                 fprintf(file1,"24   %s\n",strToken);      
             }
             else{       //为保留字 
-
-//              printf("%d    %s\n",keyword,strToken);
                 fprintf(file1,"%d    %s\n",keyword,strToken); 
             }
         }
@@ -88,34 +65,25 @@ int main(void){
                 ch=str[i];
             }
             i=i-1;
-//          printf("%s",strToken);
             InsertDigit(Binary(atoi(strToken)));    //将strToken字符串转化为数字插入到常数表中 
-//          printf("%d\n",digitals[0]);
-//          printf("25   %d\n",Binary(atoi(strToken)));
             fprintf(file1,"25   %d\n",atoi(strToken));
         }
         else if(ch=='='){
-//          printf("%d    =\n",IsDelimiter(ch));
             fprintf(file1,"%d    =\n",IsDelimiter(ch));
         }
         else if(ch=='+'){
-//          printf("%d    +\n",IsDelimiter(ch));
             fprintf(file1,"%d    +\n",IsDelimiter(ch));
         }
         else if(ch=='*'){
             i=i+1;
             ch=str[i];
             if(ch=='*'){
-//              printf("14   **\n");
                 fprintf(file1,"14   **\n");
 
             }else{
-//              printf("13   *\n");
                 fprintf(file1,"13   *\n");
                 i=i-1;
             } 
-//          i=i-1;
-//          printf("%d   *\n",IsDelimiter(str[i]));
         }
         else if(ch==';'){
             fprintf(file1,"%d    ;\n",IsDelimiter(ch));
@@ -189,21 +157,6 @@ int main(void){
             fprintf(file1,"错误！\n"); 
         }
     }
-
-//  while(j<100){
-//      if(ch[j]){
-//          strToken[j]=ch[j];
-//          j++;
-//      }else{
-//          strToken[j]='\0';
-//          break;
-//      }
-//  }
-//  int key=IsKeyword(strToken);
-//  printf("%d    %s",key,strToken);
-
-
-
     return 0;
 }
 
