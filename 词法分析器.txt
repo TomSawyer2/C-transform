@@ -1,17 +1,10 @@
 #include <stdio.h>
-int main(){
-	const int size=3;
-	int board[size][size];
-	int i=0,j=0;//0表示O，1表示X
-	int win=0;//1,2表示有人赢了 
-	for(i=0;i<size;i++){
-getchar();
-		for(j=0;j<size;j++){
-			printf("输入第%d行第%d列的棋子（0表示O，1表示X）：",i+1,j+1);
-			scanf("%d",&board[i][j]);
-		}
-	}
-
-	
+int main()
+{
+	int a=1;
+  int b=2;
+int c=5;
+int d=9;
+int e=1000;
 	return 0;
 }

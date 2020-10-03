@@ -17,7 +17,7 @@ int digitals[100]={};
 //sp1->.h,sp2->() 
 int i;
 int p=0,q=0;
-
+int num;
 int main(void){
 
     FILE *file,*file1;
@@ -40,7 +40,7 @@ int main(void){
     //printf("length=%d",length);
     printf("成功，请前往文件:词法分析器（结果）.txt中查看！"); 
     fprintf(file1,"类别码  值   操作\n");
-	fprintf(file1,"                 开始\n");                                                                                       
+	//fprintf(file1,"start              开始\n");                                                                                       
     for(i=0;i<length;i++){
         char strToken[]={""};
         ch=str[i];
@@ -64,19 +64,33 @@ int main(void){
 				}else if(keyword==5||keyword==6){
 					fprintf(file1,"%d    %s    输入\n",keyword,strToken);
 					}else if(keyword==10){
-						while(str[i+1]!=';'){
+						while(str[i+1]!='}'){
 							i++;
-						}fprintf(file1,"sp3      函数结束\n");
+						}fprintf(file1,"end      函数结束\n");
 						i++;
+						}else if(keyword==1){
+							//char strToken2[]={""};
+							while(str[i]!=';'){
+								if(str[i]=='='){
+									i++;
+									num=0;
+									//ch=str[i];
+									while(IsDigit(str[i])){
+										num=num*10+((int)str[i]-48);
+										i++;
+									}
+									fprintf(file1,"anl1      赋值x为%d\n",num);
+								}else{
+										i++;
+									}
+								}
 						}else{
 							fprintf(file1,"%d    %s\n",keyword,strToken);
 						}
 					}
 				}        
         else if(str[i]&0x80 && str[i+1]&0x80){//为汉字 
-        	
         	//fprintf(file1,"35      %c%c\n",str[i],str[i+1]);
-        	
         	i+=2; 
 		}
         else if(IsDigit(ch)){   //为数字 
@@ -145,7 +159,15 @@ int main(void){
             fprintf(file1,"%d    <\n",IsDelimiter(ch));
         }
         else if(ch=='#'){
-            fprintf(file1,"%d    #\n",IsDelimiter(ch));
+        	if(str[i+1]=='i'&&str[i+2]=='n'){
+        		while(str[i+1]!='>'){
+        		i++;
+				}
+				i++;
+				fprintf(file1,"start              开始\n");
+			}else{
+				fprintf(file1,"%d    #\n",IsDelimiter(ch));
+			}
         }
         else if(ch==','){
         	fprintf(file1,"%d    ,\n",IsDelimiter(ch));
