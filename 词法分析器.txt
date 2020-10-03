@@ -1,8 +1,17 @@
 #include <stdio.h>
-int main(void){
-	char *month[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"};
-	int number;
-	scanf("%d",&number);
-	printf("%s",month[number-1]);
+int main(){
+	const int size=3;
+	int board[size][size];
+	int i=0,j=0;//0表示O，1表示X
+	int win=0;//1,2表示有人赢了 
+	for(i=0;i<size;i++){
+getchar();
+		for(j=0;j<size;j++){
+			printf("输入第%d行第%d列的棋子（0表示O，1表示X）：",i+1,j+1);
+			scanf("%d",&board[i][j]);
+		}
+	}
+
+	
 	return 0;
 }
