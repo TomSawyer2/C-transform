@@ -44,7 +44,8 @@ int main(void){
     printf("成功，请前往文件:词法分析器（结果）.txt中查看！"); 
     fprintf(file1,"类别码  值   操作\n");
 	//fprintf(file1,"start              开始\n");  
-	char strToken2[]={""};                                                                                     
+	char strToken2[]={""};   
+	char strToken3[]={""};                                                                                  
     for(i=0;i<length;i++){
         char strToken[]={""};
         
@@ -65,7 +66,35 @@ int main(void){
             }
             else{//为保留字
 			    if(keyword==4){
-			    	fprintf(file1,"%d    %s    输出\n",keyword,strToken); 
+			    	
+			    	//i+=3;
+			    	while(str[i]!='"'){
+			    		i++; 
+					}
+					i++;
+					while(str[i]!='"'){
+			    		i++; 
+					}
+					i++;
+					if(str[i]==')'){
+						fprintf(file1,"输出       （其实也没输出什么）\n");
+						i+=3;
+					}else{
+						while(str[i+1]!=';'){
+							if(IsLetter(str[i])||IsLetter(str[i+1])||IsDigit(str[i])||IsDigit(str[i+1])){//读取变量名称 
+							Concat(getLength(strToken3),strToken3,str[i]);
+							i++;
+							}
+							if(str[i-1]==','&&(str[i-2]=='"'||str[i-3]==')')){
+								for (unsigned int q = 0;q<strlen(strToken3);q++){
+									strToken3[q] = '\0';
+									}
+							}
+						}
+						//i++;
+						fprintf(file1,"输出          %s\n",strToken3); 
+						i+=2;
+					}
 				}else if(keyword==5||keyword==6){
 					fprintf(file1,"%d    %s    输入\n",keyword,strToken);
 					}else if(keyword==10){
@@ -98,7 +127,7 @@ int main(void){
 								}
 							}
 							escape:
-							while(str[i]!=';'){//判断int后面的内容是函数还是赋值
+							while(str[i]!=';'&&str[i]!='{'&&str[i]!='\n'){//判断int后面的内容是函数还是赋值
 								if(str[i]=='='){//是赋值 
 									i++;
 									num=0;
