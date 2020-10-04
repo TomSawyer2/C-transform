@@ -19,6 +19,8 @@ int i;
 int p=0,q=0;
 int num;
 int IsInt=0;//判断是不是赋值，0不是，1是，2是默认为0
+int IsFloat=0;//判断是不是赋值，0不是，1是，2是默认为0
+int IsDouble=0;//判断是不是赋值，0不是，1是，2是默认为0
 int main(void){
 
     FILE *file,*file1;
@@ -75,9 +77,9 @@ int main(void){
 						i=i+1; 
 						//printf("str[i]=%s",str[i]);
 						 
-							int j=i;
-							for(j;str[j]!=';';j++){
-								if(str[j]=='='){
+							int j1=i;
+							for(j1;str[j1]!=';';j1++){
+								if(str[j1]=='='){
 									IsInt=1;
 									break;
 								}else{
@@ -85,9 +87,9 @@ int main(void){
 									} 
 								}
 							if(IsInt==0){
-								int m=i;
-								for(m;str[m]!=';';m++){
-									if(str[m]=='('||str[m]==')'){
+								int m1=i;
+								for(m1;str[m1]!=';';m1++){
+									if(str[m1]=='('||str[m1]==')'){
 										IsInt=0;
 										goto escape;
 									}else{
@@ -118,6 +120,122 @@ int main(void){
 									num=0;
 									if(IsInt==2&&IsLetter(str[i])==0){
 										fprintf(file1,"赋值      %s->0\n",strToken2);
+									}
+								}else if(str[i]==' '||str[i]=='\n'){//在赋值时一定要用两个空格，不然就会读入nt，我也不知道为什么。bug已经修复！前面写成i+=2了 
+									for (unsigned int k = 0;k<strlen(strToken2);k++){
+									strToken2[k] = '\0';
+									}
+									i++;
+								}else {
+									i++;
+								}
+								//fprintf(file1,"赋值      %s->%d\n",strToken2,num);
+							}
+						}else if(keyword==2){//判断float
+						i=i+1; 
+						//printf("str[i]=%s",str[i]);
+						float num2=0.000000;
+							int j2=i;
+							for(j2;str[j2]!=';';j2++){
+								if(str[j2]=='='){
+									IsFloat=1;
+									break;
+								}else{
+										IsFloat=0;
+									} 
+								}
+							if(IsFloat==0){
+								int m2=i;
+								for(m2;str[m2]!=';';m2++){
+									if(str[m2]=='('||str[m2]==')'){
+										IsFloat=0;
+										goto escape2;
+									}else{
+										IsFloat=2;
+									}
+								}
+							}
+							escape2:
+							while(str[i]!=';'){//判断int后面的内容是函数还是赋值
+								if(str[i]=='='){//是赋值 
+									i++;
+									num2=0;
+									//ch=str[i];
+									while(IsDigit(str[i])){
+										num2=num2*10+((int)str[i]-48);
+										i++;
+									}
+									if(IsInt==1){
+										fprintf(file1,"赋值      %s->%f\n",strToken2,num2);
+									}
+									//fprintf(file1,"赋值      %s->%d\n",strToken2,num);
+								}else if((IsLetter(str[i])||str[i]==',')&&IsFloat==1){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
+									Concat(getLength(strToken2),strToken2,str[i]);
+									i++;
+								}else if((IsLetter(str[i])||str[i]==',')&&IsFloat==2){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
+									Concat(getLength(strToken2),strToken2,str[i]);
+									i++;
+									
+									if(IsFloat==2&&IsLetter(str[i])==0){
+										fprintf(file1,"赋值      %s->0.000000\n",strToken2);
+									}
+								}else if(str[i]==' '||str[i]=='\n'){//在赋值时一定要用两个空格，不然就会读入nt，我也不知道为什么。bug已经修复！前面写成i+=2了 
+									for (unsigned int k = 0;k<strlen(strToken2);k++){
+									strToken2[k] = '\0';
+									}
+									i++;
+								}else {
+									i++;
+								}
+								//fprintf(file1,"赋值      %s->%d\n",strToken2,num);
+							}
+						}else if(keyword==3){//判断double
+						i=i+1; 
+						//printf("str[i]=%s",str[i]);
+						double num3=0.000000;
+							int j3=i;
+							for(j3;str[j3]!=';';j3++){
+								if(str[j3]=='='){
+									IsDouble=1;
+									break;
+								}else{
+										IsDouble=0;
+									} 
+								}
+							if(IsDouble==0){
+								int m3=i;
+								for(m3;str[m3]!=';';m3++){
+									if(str[m3]=='('||str[m3]==')'){
+										IsDouble=0;
+										goto escape3;
+									}else{
+										IsDouble=2;
+									}
+								}
+							}
+							escape3:
+							while(str[i]!=';'){//判断int后面的内容是函数还是赋值
+								if(str[i]=='='){//是赋值 
+									i++;
+									num3=0;
+									//ch=str[i];
+									while(IsDigit(str[i])){
+										num3=num3*10+((int)str[i]-48);
+										i++;
+									}
+									if(IsDouble==1){
+										fprintf(file1,"赋值      %s->%f\n",strToken2,num3);
+									}
+									//fprintf(file1,"赋值      %s->%d\n",strToken2,num);
+								}else if((IsLetter(str[i])||str[i]==',')&&IsDouble==1){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
+									Concat(getLength(strToken2),strToken2,str[i]);
+									i++;
+								}else if((IsLetter(str[i])||str[i]==',')&&IsDouble==2){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
+									Concat(getLength(strToken2),strToken2,str[i]);
+									i++;
+									
+									if(IsDouble==2&&IsLetter(str[i])==0){
+										fprintf(file1,"赋值      %s->0.000000\n",strToken2);
 									}
 								}else if(str[i]==' '||str[i]=='\n'){//在赋值时一定要用两个空格，不然就会读入nt，我也不知道为什么。bug已经修复！前面写成i+=2了 
 									for (unsigned int k = 0;k<strlen(strToken2);k++){

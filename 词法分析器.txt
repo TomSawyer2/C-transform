@@ -4,5 +4,7 @@ int a=10;
 int b=200;
 int c,d,e=100;
 int five=5;
+float cd=1.000;
+double ef=1.0;
 return 0;
 }
