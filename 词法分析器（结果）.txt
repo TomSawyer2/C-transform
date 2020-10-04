@@ -2,4 +2,5 @@
 start            开始
 输入          abc,bcd,cd,sdd
 输入          abcds
+输出          a
 end      函数结束

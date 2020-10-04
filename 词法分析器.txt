@@ -2,5 +2,6 @@
 int main() {
 scanf("%d",&abc,&abcd,&bcd,&hsdd);
 getchar("%d",&abcds);
+printf("abcd%d",a);
 	return 0;
 }

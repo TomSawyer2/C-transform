@@ -22,7 +22,19 @@ int IsInt=0;//判断是不是赋值，0不是，1是，2是默认为0
 int IsFloat=0;//判断是不是赋值，0不是，1是，2是默认为0
 int IsDouble=0;//判断是不是赋值，0不是，1是，2是默认为0
 int main(void){
-
+	cJSON *json = cJSON_CreateObject();
+	//cJSON_AddItemToObject(json,"type",cJSON_CreateString("输入"));
+	//cJSON_AddItemToObject(json,"type",cJSON_CreateString("输出"));
+	cJSON *array = NULL;
+	cJSON *obj = NULL;
+	//cJSON_AddItemToObject(json,"content",array=cJSON_CreateArray());
+	//cJSON_AddItemToObject(json,"outinput",array=cJSON_CreateArray());//输入输出 
+	//cJSON_AddItemToObject(json,"judge",array=cJSON_CreateArray());//判断 
+	//cJSON_AddItemToObject(json,"startend",array=cJSON_CreateArray());//开始与结束 
+	 
+	
+	
+	
     FILE *file,*file1;
     file1=fopen("词法分析器（结果）.txt","w");
     //malloc(400*sizeof(int));
@@ -41,7 +53,7 @@ int main(void){
     char ch;
     int length=getLength(str);
     //printf("length=%d",length);
-    printf("成功，请前往文件:词法分析器（结果）.txt中查看！"); 
+    printf("成功，请前往文件:词法分析器（结果）.txt中查看！\n"); 
     fprintf(file1,"类别码  值   操作\n");
 	//fprintf(file1,"start              开始\n");  
 	char strToken2[]={""};   
@@ -95,6 +107,7 @@ int main(void){
 						//i++;
 						fprintf(file1,"输出          %s\n",strToken3); 
 						i+=2;
+						cJSON_AddStringToObject(obj,"outinput",strToken3);
 					}
 				}else if(keyword==5||keyword==6){
 					while(str[i]!='&'){
@@ -125,6 +138,7 @@ int main(void){
 						while(str[i+1]!='}'){
 							i++;
 						}fprintf(file1,"end      函数结束\n");
+						cJSON_AddItemToObject(json,"end",cJSON_CreateString("NULL"));
 						i++;
 						}else if(keyword==1){//判断int
 						i=i+1; 
@@ -354,7 +368,9 @@ int main(void){
             fprintf(file1,"%d    )\n",IsDelimiter(ch));
         }
         else if(ch=='{'){
-            fprintf(file1,"%d    {\n",IsDelimiter(ch));
+        	if (str[i-1]=='='){
+        		fprintf(file1,"%d    {\n",IsDelimiter(ch));
+			}
         }
         else if(ch=='}'){
             fprintf(file1,"%d    }\n",IsDelimiter(ch));
@@ -381,6 +397,13 @@ int main(void){
 				}
 				i++;
 				fprintf(file1,"start            开始\n");
+				cJSON_AddItemToObject(json,"start",cJSON_CreateString("NULL"));
+				//cJSON *array = NULL;
+				cJSON_AddItemToObject(json,"process",array=cJSON_CreateArray());//过程
+				
+				cJSON_AddItemToArray(array,obj=cJSON_CreateObject());
+       			cJSON_AddItemToObject(obj,"judge",cJSON_CreateString(""));
+    			cJSON_AddItemToObject(obj,"normal",cJSON_CreateString(""));
 			}else{
 				fprintf(file1,"%d    #\n",IsDelimiter(ch));
 			}
@@ -425,6 +448,17 @@ int main(void){
             fprintf(file1,"错误！\n"); 
         }
     }
+    printf("data:%s\n",array = cJSON_Print(json));
+    //将json结构格式化到缓冲区
+	char *buf = cJSON_Print(json);
+	//打开文件写入json内容
+	FILE *fp = fopen("create.json","w");
+	fwrite(buf,strlen(buf),1,fp);
+	free(buf);
+	fclose(fp);
+	//释放json结构所占用的内存
+	cJSON_Delete(json);
+	
     return 0;
 }
 
