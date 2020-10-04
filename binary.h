@@ -8,3 +8,4 @@ int Binary(int d){
     }
     return sum;  
 }
+//update

@@ -18,6 +18,7 @@ int digitals[100]={};
 int i;
 int p=0,q=0;
 int num;
+int IsInt=0;//判断是不是赋值，0不是，1是，2是默认为0
 int main(void){
 
     FILE *file,*file1;
@@ -40,9 +41,11 @@ int main(void){
     //printf("length=%d",length);
     printf("成功，请前往文件:词法分析器（结果）.txt中查看！"); 
     fprintf(file1,"类别码  值   操作\n");
-	//fprintf(file1,"start              开始\n");                                                                                       
+	//fprintf(file1,"start              开始\n");  
+	char strToken2[]={""};                                                                                     
     for(i=0;i<length;i++){
         char strToken[]={""};
+        
         ch=str[i];
         if(ch==' '|| ch=='\n' ||ch=='\t'){
         }
@@ -68,10 +71,33 @@ int main(void){
 							i++;
 						}fprintf(file1,"end      函数结束\n");
 						i++;
-						}else if(keyword==1){
-							//char strToken2[]={""};
-							while(str[i]!=';'){
-								if(str[i]=='='){
+						}else if(keyword==1){//判断int
+						i=i+1; 
+						//printf("str[i]=%s",str[i]);
+						 
+							int j=i;
+							for(j;str[j]!=';';j++){
+								if(str[j]=='='){
+									IsInt=1;
+									break;
+								}else{
+										IsInt=0;
+									} 
+								}
+							if(IsInt==0){
+								int m=i;
+								for(m;str[m]!=';';m++){
+									if(str[m]=='('||str[m]==')'){
+										IsInt=0;
+										goto escape;
+									}else{
+										IsInt=2;
+									}
+								}
+							}
+							escape:
+							while(str[i]!=';'){//判断int后面的内容是函数还是赋值
+								if(str[i]=='='){//是赋值 
 									i++;
 									num=0;
 									//ch=str[i];
@@ -79,11 +105,30 @@ int main(void){
 										num=num*10+((int)str[i]-48);
 										i++;
 									}
-									fprintf(file1,"anl1      赋值x为%d\n",num);
-								}else{
-										i++;
+									if(IsInt==1){
+										fprintf(file1,"赋值      %s->%d\n",strToken2,num);
 									}
+									//fprintf(file1,"赋值      %s->%d\n",strToken2,num);
+								}else if((IsLetter(str[i])||str[i]==',')&&IsInt==1){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
+									Concat(getLength(strToken2),strToken2,str[i]);
+									i++;
+								}else if((IsLetter(str[i])||str[i]==',')&&IsInt==2){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
+									Concat(getLength(strToken2),strToken2,str[i]);
+									i++;
+									num=0;
+									if(IsInt==2&&IsLetter(str[i])==0){
+										fprintf(file1,"赋值      %s->0\n",strToken2);
+									}
+								}else if(str[i]==' '||str[i]=='\n'){//在赋值时一定要用两个空格，不然就会读入nt，我也不知道为什么。bug已经修复！前面写成i+=2了 
+									for (unsigned int k = 0;k<strlen(strToken2);k++){
+									strToken2[k] = '\0';
+									}
+									i++;
+								}else {
+									i++;
 								}
+								//fprintf(file1,"赋值      %s->%d\n",strToken2,num);
+							}
 						}else{
 							fprintf(file1,"%d    %s\n",keyword,strToken);
 						}
@@ -164,7 +209,7 @@ int main(void){
         		i++;
 				}
 				i++;
-				fprintf(file1,"start              开始\n");
+				fprintf(file1,"start            开始\n");
 			}else{
 				fprintf(file1,"%d    #\n",IsDelimiter(ch));
 			}

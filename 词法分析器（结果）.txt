@@ -1,8 +1,7 @@
 类别码  值   操作
-start              开始
-anl1      赋值x为1
-anl1      赋值x为2
-anl1      赋值x为5
-anl1      赋值x为9
-anl1      赋值x为1000
+start            开始
+赋值      a->10
+赋值      b->200
+赋值      c,d,e->100
+赋值      five->5
 end      函数结束

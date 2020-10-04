@@ -1,10 +1,8 @@
 #include <stdio.h>
-int main()
-{
-	int a=1;
-  int b=2;
-int c=5;
-int d=9;
-int e=1000;
-	return 0;
+int main(){
+int a=10;
+int b=200;
+int c,d,e=100;
+int five=5;
+return 0;
 }

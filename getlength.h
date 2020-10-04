@@ -10,3 +10,4 @@ int getLength(char *str){
     }
     return len;
 } 
+//update 
