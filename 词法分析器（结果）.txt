@@ -1,9 +1,5 @@
 类别码  值   操作
 start            开始
-赋值      a->0
-赋值      bcd->100
-赋值      abc->12.000000
-赋值      adc->100.000000
-输出          abc,adc
-输出          abc
+输入          abc,bcd,cd,sdd
+输入          abcds
 end      函数结束

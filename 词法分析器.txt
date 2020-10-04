@@ -1,10 +1,6 @@
 #include <stdio.h>
-int main(){
-int a;
-int bcd=100;
-float abc=12;
-double adc=100;
-printf("%d %d",abc,adc);
-printf("%d",abc);
-return 0;
+int main() {
+scanf("%d",&abc,&abcd,&bcd,&hsdd);
+getchar("%d",&abcds);
+	return 0;
 }

@@ -45,7 +45,8 @@ int main(void){
     fprintf(file1,"类别码  值   操作\n");
 	//fprintf(file1,"start              开始\n");  
 	char strToken2[]={""};   
-	char strToken3[]={""};                                                                                  
+	char strToken3[]={""};
+	char strToken4[]={""};                                                                                  
     for(i=0;i<length;i++){
         char strToken[]={""};
         
@@ -96,8 +97,31 @@ int main(void){
 						i+=2;
 					}
 				}else if(keyword==5||keyword==6){
-					fprintf(file1,"%d    %s    输入\n",keyword,strToken);
-					}else if(keyword==10){
+					while(str[i]!='&'){
+			    		i++;
+					}
+					i++;
+					if(str[i]==')'){
+						fprintf(file1,"输入       （如果出现这句话你程序必错）\n");
+						i+=3;
+					}else{
+						while(str[i]!=')'){
+							if(str[i-2]==','&&str[i-3]=='"'){
+								for (unsigned int s = 0;s<strlen(strToken4);s++){
+									strToken4[s] = '\0';
+									}
+							}
+							if(str[i]=='&'){
+								i++;
+							}else{
+								Concat(getLength(strToken4),strToken4,str[i]);
+							}
+							i++;
+						}
+						i++;
+					fprintf(file1,"输入          %s\n",strToken4);
+					}
+				}else if(keyword==10){
 						while(str[i+1]!='}'){
 							i++;
 						}fprintf(file1,"end      函数结束\n");
