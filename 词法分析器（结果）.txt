@@ -3,4 +3,8 @@ start            开始
 输入          abc,bcd,cd,sdd
 输入          abcds
 输出          a
+条件         a=1
+要做的事      a++;
+b++;
+
 end      函数结束

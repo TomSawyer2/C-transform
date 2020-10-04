@@ -58,7 +58,9 @@ int main(void){
 	//fprintf(file1,"start              开始\n");  
 	char strToken2[]={""};   
 	char strToken3[]={""};
-	char strToken4[]={""};                                                                                  
+	char strToken4[]={""};
+	char strToken5[]={""};
+	char strToken6[]={""};                                                                                   
     for(i=0;i<length;i++){
         char strToken[]={""};
         
@@ -107,7 +109,8 @@ int main(void){
 						//i++;
 						fprintf(file1,"输出          %s\n",strToken3); 
 						i+=2;
-						cJSON_AddStringToObject(obj,"outinput",strToken3);
+						cJSON_AddStringToObject(obj,"output",strToken3);
+						//cJSON_AddItemToObject(obj,"output",array=cJSON_CreateArray());
 					}
 				}else if(keyword==5||keyword==6){
 					while(str[i]!='&'){
@@ -133,12 +136,14 @@ int main(void){
 						}
 						i++;
 					fprintf(file1,"输入          %s\n",strToken4);
+					cJSON_AddStringToObject(obj,"input",strToken4);
+					
 					}
 				}else if(keyword==10){
 						while(str[i+1]!='}'){
 							i++;
 						}fprintf(file1,"end      函数结束\n");
-						cJSON_AddItemToObject(json,"end",cJSON_CreateString("NULL"));
+						cJSON_AddItemToObject(json,"end",cJSON_CreateString(""));
 						i++;
 						}else if(keyword==1){//判断int
 						i=i+1; 
@@ -314,6 +319,37 @@ int main(void){
 								}
 								//fprintf(file1,"赋值      %s->%d\n",strToken2,num);
 							}
+						}else if(keyword==13){
+							i++;
+							while(str[i]!=')'){
+								Concat(getLength(strToken5),strToken5,str[i]);
+								
+								if(str[i]=='('){
+									for (unsigned int z = 0;z<strlen(strToken5);z++){
+									strToken5[z] = '\0';
+									}
+								}
+								i++;
+							}
+							fprintf(file1,"条件         %s\n",strToken5);
+							cJSON_AddItemToObject(obj,"judgecon",cJSON_CreateString(strToken5));
+							while(str[i]!='{'){
+								i++;
+							}
+							i+=1;
+							while(str[i]!='}'){
+								
+								Concat(getLength(strToken6),strToken6,str[i]);
+								
+								if(str[i-2]==')'){
+									for (unsigned int y = 0;y<strlen(strToken6);y++){
+									strToken6[y] = '\0';
+									}
+								}
+								i++;
+							}
+							fprintf(file1,"要做的事      %s\n",strToken6);
+							cJSON_AddItemToObject(obj,"judgepro",cJSON_CreateString(strToken6));
 						}else{
 							fprintf(file1,"%d    %s\n",keyword,strToken);
 						}
@@ -397,12 +433,13 @@ int main(void){
 				}
 				i++;
 				fprintf(file1,"start            开始\n");
-				cJSON_AddItemToObject(json,"start",cJSON_CreateString("NULL"));
+				cJSON_AddItemToObject(json,"start",cJSON_CreateString(""));
 				//cJSON *array = NULL;
 				cJSON_AddItemToObject(json,"process",array=cJSON_CreateArray());//过程
 				
 				cJSON_AddItemToArray(array,obj=cJSON_CreateObject());
-       			cJSON_AddItemToObject(obj,"judge",cJSON_CreateString(""));
+       			
+       			
     			cJSON_AddItemToObject(obj,"normal",cJSON_CreateString(""));
 			}else{
 				fprintf(file1,"%d    #\n",IsDelimiter(ch));

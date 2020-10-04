@@ -1,7 +1,11 @@
 #include <stdio.h>
 int main() {
-scanf("%d",&abc,&abcd,&bcd,&hsdd);
+scanf("%d",&abc,&abcd,&bcd,&sdd);
 getchar("%d",&abcds);
 printf("abcd%d",a);
+if(a=1){
+a++;
+b++;
+}
 	return 0;
 }

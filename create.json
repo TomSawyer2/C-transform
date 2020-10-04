@@ -1,9 +1,12 @@
 {
-	"start":	"NULL",
+	"start":	"",
 	"process":	[{
-			"judge":	"",
 			"normal":	"",
-			"outinput":	"a"
+			"input":	"abc,bcd,cd,sdd",
+			"input":	"abcds",
+			"output":	"a",
+			"judgecon":	"a=1",
+			"judgepro":	"a++;\nb++;\n"
 		}],
-	"end":	"NULL"
+	"end":	""
 }
