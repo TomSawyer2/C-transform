@@ -21,6 +21,7 @@ int num;
 int IsInt=0;//判断是不是赋值，0不是，1是，2是默认为0
 int IsFloat=0;//判断是不是赋值，0不是，1是，2是默认为0
 int IsDouble=0;//判断是不是赋值，0不是，1是，2是默认为0
+char pro=1;
 int main(void){
 	cJSON *json = cJSON_CreateObject();
 	//cJSON_AddItemToObject(json,"type",cJSON_CreateString("输入"));
@@ -332,7 +333,9 @@ int main(void){
 								i++;
 							}
 							fprintf(file1,"条件         %s\n",strToken5);
+							//cJSON_AddItemToObject(obj,"judgecon",cJSON_CreateString(strToken5));
 							cJSON_AddItemToObject(obj,"judgecon",cJSON_CreateString(strToken5));
+							//pro++;
 							while(str[i]!='{'){
 								i++;
 							}
@@ -349,7 +352,10 @@ int main(void){
 								i++;
 							}
 							fprintf(file1,"要做的事      %s\n",strToken6);
+							//Concat(getLength(strToken6),strToken6,(char*)pro);
 							cJSON_AddItemToObject(obj,"judgepro",cJSON_CreateString(strToken6));
+							//cJSON_AddItemToObject(obj,"judgepro",cJSON_CreateString(pro));
+							//pro++;
 						}else{
 							fprintf(file1,"%d    %s\n",keyword,strToken);
 						}
@@ -433,14 +439,16 @@ int main(void){
 				}
 				i++;
 				fprintf(file1,"start            开始\n");
-				cJSON_AddItemToObject(json,"start",cJSON_CreateString(""));
+				cJSON_AddItemToObject(json,"start",cJSON_CreateString("pro=1"));
+				
+				pro++;
 				//cJSON *array = NULL;
 				cJSON_AddItemToObject(json,"process",array=cJSON_CreateArray());//过程
 				
 				cJSON_AddItemToArray(array,obj=cJSON_CreateObject());
        			
        			
-    			cJSON_AddItemToObject(obj,"normal",cJSON_CreateString(""));
+    			//cJSON_AddItemToObject(obj,"normal",cJSON_CreateString(""));
 			}else{
 				fprintf(file1,"%d    #\n",IsDelimiter(ch));
 			}

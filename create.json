@@ -1,8 +1,7 @@
 {
-	"start":	"",
+	"start":	"pro=1",
 	"process":	[{
-			"normal":	"",
-			"input":	"abc,bcd,cd,sdd",
+			"input":	"abc,bcd,cd,dd",
 			"input":	"abcds",
 			"output":	"a",
 			"judgecon":	"a=1",
