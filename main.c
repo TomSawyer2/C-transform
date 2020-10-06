@@ -22,7 +22,8 @@ int IsInt=0;//判断是不是赋值，0不是，1是，2是默认为0
 int IsFloat=0;//判断是不是赋值，0不是，1是，2是默认为0
 int IsDouble=0;//判断是不是赋值，0不是，1是，2是默认为0
 int value;
-int value2=1;;
+int value2=1;
+char charnum3[100];
 int main(void){
 	unsigned char pro[100]={0};
 	while(value<100){
@@ -331,17 +332,21 @@ int main(void){
 							while(str[i]!=';'){//判断int后面的内容是函数还是赋值
 								if(str[i]=='='){//是赋值 
 									i++;
-									num3=0;
+									num3=0.000000;
 									//ch=str[i];
 									while(IsDigit(str[i])){
-										num3=num3*10+((int)str[i]-48);
+										num3=num3*10+((double)str[i]-48);
 										i++;
 									}
 									if(IsDouble==1){
+										
 										fprintf(file1,"赋值      %s->%f\n",strToken2,num3);
 										cJSON_AddItemToObject(json,"process",array11=cJSON_CreateArray());
 										cJSON_AddItemToObject(array11,"process",cJSON_CreateString("equaldouble"));
-										cJSON_AddItemToObject(array11,"process",cJSON_CreateString("1.000000"));
+										//num3=0.000001;
+										gcvt(num3,7,charnum3);
+										//sprintf(charnum3,%d,num3);
+										cJSON_AddItemToObject(array11,"process",cJSON_CreateString(charnum3));
 									}
 									//fprintf(file1,"赋值      %s->%d\n",strToken2,num);
 								}else if((IsLetter(str[i])||str[i]==',')&&IsDouble==1){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 

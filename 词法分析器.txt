@@ -3,6 +3,10 @@ int main() {
 int a;
 int b=1;
 float a;
+if(a=1){
+a++;
+b++;
+}
 float b=1;
 double a;
 double b=1;
