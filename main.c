@@ -6,6 +6,7 @@
 #include "isdigit.h"
 #include "binary.h"
 #include "cJSON.h"
+#include <windows.h>
 //保留字表
 char keywords[15][12]={"int","float","double","printf","scanf","getchar","break","else","char","return","continue","for","if","while","void"};    
 //分隔符表
@@ -29,8 +30,10 @@ int main(void){
 	while(value<100){
 		pro[value]=value;
 		value++;
-		
-	} 
+	}
+	char cmd[80];
+	sprintf(cmd,"Start E:\\graphviz\\bin\\gvedit.exe graph.dot");
+	system(cmd);
 	cJSON *json = cJSON_CreateObject();
 	cJSON *array = NULL;
 	cJSON *array2 = NULL;
@@ -50,14 +53,16 @@ int main(void){
 	cJSON *array16 = NULL;
 	cJSON *array17 = NULL;
 	cJSON *obj = NULL;
-	 
 	
     FILE *file,*file1;
     file1=fopen("词法分析器（结果）.txt","w");
+    FILE *file2=fopen("graph.dot","w");
+    setbuf(file2,NULL);//清空缓存？ 
     //malloc(400*sizeof(int));
     char string[380];
     int j0,k0=0;
     file=fopen("词法分析器.txt","r");//打开文件 
+    //file=fopen("graph.dot","r");
     char ch0;
     while((ch0=fgetc(file))!=EOF){
         string[k0++]=ch0;
@@ -69,6 +74,8 @@ int main(void){
     char ch;
     int length=getLength(str);
     printf("成功，请前往文件:词法分析器（结果）.txt中查看！\n"); 
+    //printf("成功，请前往文件:graph.dot中查看！\n"); 
+    fprintf(file2,"digraph {\nedge [fontname=\"FangSong\"];\nnode [shape=box, fontname=\"SimSun\" size=\"20,20\"];\n");
     fprintf(file1,"类别码  值   操作\n");
 	char strToken2[]={""};   
 	char strToken3[]={""};
@@ -108,6 +115,7 @@ int main(void){
 					i++;
 					if(str[i]==')'){
 						fprintf(file1,"输出       （其实也没输出什么）\n");
+						
 						i+=3;
 					}else{
 						while(str[i+1]!=';'){
@@ -126,6 +134,9 @@ int main(void){
 						cJSON_AddItemToObject(json,"process",array2=cJSON_CreateArray());
 						cJSON_AddItemToObject(array2,"process",cJSON_CreateString("output"));
 						cJSON_AddItemToObject(array2,"process",cJSON_CreateString(strToken3));
+						fprintf(file2,"equal%d;\n",i);
+						fprintf(file2,"equal%d [shape=parallelogram, label=\"%s\"];\n",i,strToken3);
+						fprintf(file2,"equal%d->",i);
 					}
 				}else if(keyword==5||keyword==6){
 					while(str[i]!='&'){
@@ -155,6 +166,9 @@ int main(void){
 					cJSON_AddItemToObject(array3,"process",cJSON_CreateString("input"));
 					cJSON_AddItemToObject(array3,"process",cJSON_CreateString(strToken4));
 					value2++;
+					fprintf(file2,"equal%d;\n",i);
+					fprintf(file2,"equal%d [shape=parallelogram, label=\"%s\"];\n",i,strToken4);
+					fprintf(file2,"equal%d->",i);
 					}
 				}else if(keyword==10){
 						while(str[i+1]!='}'){
@@ -163,7 +177,14 @@ int main(void){
 						cJSON_AddItemToObject(json,"end",array9=cJSON_CreateArray());
 						cJSON_AddItemToObject(array9,"end",cJSON_CreateString("end"));
 						cJSON_AddItemToObject(array9,"end",cJSON_CreateString("end"));
-						cJSON_AddItemToObject(array9,"end",cJSON_CreateString("NULL"));
+						fprintf(file2,"end;\n");
+						fprintf(file2,"end [shape=ellipse, label=\"end\"];\n");
+						//fprintf(file2,"equal%d->",i);
+						fprintf(file2,"}");
+						sprintf(cmd,"dot -Tpng graph.dot -o graph.png");
+						system(cmd);
+						//dot -Tpng tree.dot -o tree.png
+						//cJSON_AddItemToObject(array9,"end",cJSON_CreateString("NULL"));
 						i++;
 						}else if(keyword==1){//判断int
 						i=i+1; 
@@ -200,11 +221,18 @@ int main(void){
 										fprintf(file1,"赋值      %s->%d\n",strToken2,num);
 										cJSON_AddItemToObject(json,"process",array5=cJSON_CreateArray());
 										cJSON_AddItemToObject(array5,"process",cJSON_CreateString("equalint"));
+										
+										fprintf(file2,"equal%d\n",i);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=%d\"];\n",i,strToken2,num);
+										fprintf(file2,"equal%d->",i);
 										//cJSON_AddItemToObject(array5,"process",cJSON_CreateString(strToken2));
-										Concat(getLength(strToken2),strToken2,'=');
-										sprintf(number, "%d", num);
-										Concat(getLength(strToken2),strToken2,number);
-										cJSON_AddItemToObject(array5,"process",cJSON_CreateString(strToken2));
+										//Concat(getLength(strToken2),strToken2,'=');
+										//sprintf(number, "%d", num);
+										//itoa(num, strToken2, 10);
+										//Concat(getLength(strToken2),strToken2,number);
+										//cJSON_AddItemToObject(array5,"process",cJSON_CreateString(number));
+										sprintf(number, "%s=%d",strToken2,num);
+										cJSON_AddItemToObject(array5,"process",cJSON_CreateString(number));
 									}
 								}else if((IsLetter(str[i])||str[i]==',')&&IsInt==1){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
 									Concat(getLength(strToken2),strToken2,str[i]);
@@ -217,8 +245,16 @@ int main(void){
 										fprintf(file1,"赋值      %s->0\n",strToken2);
 										cJSON_AddItemToObject(json,"process",array4=cJSON_CreateArray());
 										cJSON_AddItemToObject(array4,"process",cJSON_CreateString("equalint"));
-										cJSON_AddItemToObject(array4,"process",cJSON_CreateString(strToken2));
-										cJSON_AddItemToObject(array4,"process",cJSON_CreateString("0"));
+										//fprintf(file2,"%s->",strToken2);
+										
+										fprintf(file2,"equal%d\n",i);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=0\"];\n",i,strToken2,num);
+										fprintf(file2,"equal%d->",i);
+										//cJSON_AddItemToObject(array4,"process",cJSON_CreateString(strToken2));
+										//cJSON_AddItemToObject(array4,"process",cJSON_CreateString("0"));
+										sprintf(number, "%s=%d",strToken2,0);
+										cJSON_AddItemToObject(array4,"process",cJSON_CreateString(number));
+										
 									}
 								}else if(str[i]==' '||str[i]=='\n'){//在赋值时一定要用两个空格，不然就会读入nt，我也不知道为什么。bug已经修复！前面写成i+=2了 
 									for (unsigned int k = 0;k<strlen(strToken2);k++){
@@ -265,9 +301,17 @@ int main(void){
 										fprintf(file1,"赋值      %s->%f\n",strToken2,num2);
 										cJSON_AddItemToObject(json,"process",array7=cJSON_CreateArray());
 										cJSON_AddItemToObject(array7,"process",cJSON_CreateString("equalfloat"));
-										cJSON_AddItemToObject(array7,"process",cJSON_CreateString(strToken2));
-										sprintf(number, "%.6lf", num2);
+										//fprintf(file2,"%s->",strToken2);
+										
+										fprintf(file2,"equal%d\n",i);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=%f\"];\n",i,strToken2,num2);
+										fprintf(file2,"equal%d->",i);
+										//cJSON_AddItemToObject(array7,"process",cJSON_CreateString(strToken2));
+										//sprintf(number, "%.6lf", num2);
+										//cJSON_AddItemToObject(array7,"process",cJSON_CreateString(number));
+										sprintf(number, "%s=%f",strToken2,num2);
 										cJSON_AddItemToObject(array7,"process",cJSON_CreateString(number));
+										
 									}
 								}else if((IsLetter(str[i])||str[i]==',')&&IsFloat==1){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
 									Concat(getLength(strToken2),strToken2,str[i]);
@@ -280,8 +324,14 @@ int main(void){
 										fprintf(file1,"赋值      %s->0.000000\n",strToken2);
 										cJSON_AddItemToObject(json,"process",array6=cJSON_CreateArray());
 										cJSON_AddItemToObject(array6,"process",cJSON_CreateString("equalfloat"));
-										cJSON_AddItemToObject(array6,"process",cJSON_CreateString(strToken2));
-										cJSON_AddItemToObject(array6,"process",cJSON_CreateString("0.000000"));
+										//fprintf(file2,"%s->",strToken2);
+										fprintf(file2,"equal%d\n",i);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=0.000000\"];\n",i,strToken2);
+										fprintf(file2,"equal%d->",i);
+										//cJSON_AddItemToObject(array6,"process",cJSON_CreateString(strToken2));
+										//cJSON_AddItemToObject(array6,"process",cJSON_CreateString("0.000000"));
+										sprintf(number, "%s=%f",strToken2,0.000000);
+										cJSON_AddItemToObject(array6,"process",cJSON_CreateString(number));
 									}
 								}else if(str[i]==' '||str[i]=='\n'){//在赋值时一定要用两个空格，不然就会读入nt，我也不知道为什么。bug已经修复！前面写成i+=2了 
 									for (unsigned int k = 0;k<strlen(strToken2);k++){
@@ -329,9 +379,16 @@ int main(void){
 										fprintf(file1,"赋值      %s->%f\n",strToken2,num3);
 										cJSON_AddItemToObject(json,"process",array11=cJSON_CreateArray());
 										cJSON_AddItemToObject(array11,"process",cJSON_CreateString("equaldouble"));
-										cJSON_AddItemToObject(array11,"process",cJSON_CreateString(strToken2));
-										sprintf(number, "%.6lf", num3);
+										//fprintf(file2,"%s->",strToken2);
+										fprintf(file2,"equal%d\n",i);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=%f\"];\n",i,strToken2,num3);
+										fprintf(file2,"equal%d->",i);
+										//cJSON_AddItemToObject(array11,"process",cJSON_CreateString(strToken2));
+										//sprintf(number, "%.6lf", num3);
+										//cJSON_AddItemToObject(array11,"process",cJSON_CreateString(number));
+										sprintf(number, "%s=%f",strToken2,num3);
 										cJSON_AddItemToObject(array11,"process",cJSON_CreateString(number));
+										
 									}
 								}else if((IsLetter(str[i])||str[i]==',')&&IsDouble==1){//读取赋值的变量名称，当然也可能是函数的名称，后者直接忽略 
 									Concat(getLength(strToken2),strToken2,str[i]);
@@ -344,8 +401,15 @@ int main(void){
 										fprintf(file1,"赋值      %s->0.000000\n",strToken2);
 										cJSON_AddItemToObject(json,"process",array8=cJSON_CreateArray());
 										cJSON_AddItemToObject(array8,"process",cJSON_CreateString("equaldouble"));
-										cJSON_AddItemToObject(array8,"process",cJSON_CreateString(strToken2));
-										cJSON_AddItemToObject(array8,"process",cJSON_CreateString("0.000000"));
+										//fprintf(file2,"%s->",strToken2);
+										fprintf(file2,"equal%d\n",i);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=0.000000\"];\n",i,strToken2);
+										fprintf(file2,"equal%d->",i);
+										//cJSON_AddItemToObject(array8,"process",cJSON_CreateString(strToken2));
+										//cJSON_AddItemToObject(array8,"process",cJSON_CreateString("0.000000"));
+										sprintf(number, "%s=%f",strToken2,0.000000);
+										cJSON_AddItemToObject(array8,"process",cJSON_CreateString(number));
+										
 									}
 								}else if(str[i]==' '||str[i]=='\n'){//在赋值时一定要用两个空格，不然就会读入nt，我也不知道为什么。bug已经修复！前面写成i+=2了 
 									for (unsigned int k = 0;k<strlen(strToken2);k++){
@@ -373,6 +437,11 @@ int main(void){
 							cJSON_AddItemToObject(json,"process",array12=cJSON_CreateArray());
 							cJSON_AddItemToObject(array12,"process",cJSON_CreateString("judgecondition"));
 							cJSON_AddItemToObject(array12,"process",cJSON_CreateString(strToken5));
+							//fprintf(file2,"%s->",strToken5);
+							//fprintf(file2,"%s;\n%s->",strToken5,strToken5);
+							fprintf(file2,"equal%d\n",i);
+							fprintf(file2,"equal%d [shape=diamond, label=\"%s\"];\n",i,strToken5);
+							fprintf(file2,"equal%d->",i);
 							while(str[i]!='{'){
 								i++;
 							}
@@ -392,6 +461,11 @@ int main(void){
 							cJSON_AddItemToObject(json,"process",array13=cJSON_CreateArray());
 							cJSON_AddItemToObject(array13,"process",cJSON_CreateString("judgetodo"));
 							cJSON_AddItemToObject(array13,"process",cJSON_CreateString(strToken6));
+							//fprintf(file2,"%s->",strToken6);
+							//fprintf(file2,"%s;\n%s->",strToken6,strToken6);
+							fprintf(file2,"equal%d\n",i);
+							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",i,strToken6);
+							fprintf(file2,"equal%d->",i);
 						}else if(keyword==8){
 							while(str[i]!='{'){
 								i++;
@@ -402,7 +476,7 @@ int main(void){
 								i++;
 								if(str[i-2]=='{'){
 									for (unsigned int clear = 0;clear<strlen(strToken7); clear++){
-									strToken7[clear] = '\0';
+									strToken7[clear] = '\0'; 
 								}
 							}
 							}
@@ -410,6 +484,11 @@ int main(void){
 							cJSON_AddItemToObject(json,"process",array14=cJSON_CreateArray());
 							cJSON_AddItemToObject(array14,"process",cJSON_CreateString("else"));
 							cJSON_AddItemToObject(array14,"process",cJSON_CreateString(strToken7));
+							//fprintf(file2,"%s->",strToken7);
+							//fprintf(file2,"%s;\n%s->",strToken7,strToken7);
+							fprintf(file2,"equal%d\n",i);
+							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",i,strToken7);
+							fprintf(file2,"equal%d->",i);
 						}else if(keyword==14){
 							i++;
 							while(str[i]!=')'){
@@ -426,6 +505,11 @@ int main(void){
 							cJSON_AddItemToObject(json,"process",array15=cJSON_CreateArray());
 							cJSON_AddItemToObject(array15,"process",cJSON_CreateString("judgecondition"));
 							cJSON_AddItemToObject(array15,"process",cJSON_CreateString(strToken8));
+							//fprintf(file2,"%s->",strToken8);
+							//fprintf(file2,"%s;\n%s->",strToken8,strToken8);
+							fprintf(file2,"equal%d\n",i);
+							fprintf(file2,"equal%d [shape=diamond, label=\"%s\"];\n",i,strToken8);
+							fprintf(file2,"equal%d->",i);
 							//cJSON_AddItemToObject(obj,"judgecon",cJSON_CreateString(strToken5));
 							//cJSON_AddItemToObject(obj,"judgecon",cJSON_CreateString(strToken5));
 							//pro++;
@@ -434,8 +518,10 @@ int main(void){
 							}
 							i+=1;
 							while(str[i]!='}'){
-								
-								Concat(getLength(strToken9),strToken9,str[i]);
+								if(str[i]==';'){
+									i++;
+								}else{
+									Concat(getLength(strToken9),strToken9,str[i]);
 								
 								if(str[i-2]==')'){
 									for (unsigned int clear3 = 0;clear3<strlen(strToken9);clear3++){
@@ -443,11 +529,19 @@ int main(void){
 									}
 								}
 								i++;
+								}
+								
+								
 							}
 							fprintf(file1,"要做的事      %s\n",strToken9);
 							cJSON_AddItemToObject(json,"process",array16=cJSON_CreateArray());
 							cJSON_AddItemToObject(array16,"process",cJSON_CreateString("judgetodo"));
 							cJSON_AddItemToObject(array16,"process",cJSON_CreateString(strToken9));
+							//fprintf(file2,"%s->",strToken9);
+							//fprintf(file2,"%s;\n%s->",strToken9,strToken9);
+							fprintf(file2,"equal%d\n",i);
+							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",i,strToken9);
+							fprintf(file2,"equal%d->",i);
 						}else{
 							fprintf(file1,"%d    %s\n",keyword,strToken);
 						}
@@ -534,12 +628,15 @@ int main(void){
 				//cJSON_AddItemToObject(json,"start",cJSON_CreateString("pro=="));
 				cJSON_AddItemToObject(json,"example",array10=cJSON_CreateArray());
 				cJSON_AddItemToObject(array10,"example",cJSON_CreateString("type"));
-				cJSON_AddItemToObject(array10,"example",cJSON_CreateString("content1"));
-				cJSON_AddItemToObject(array10,"example",cJSON_CreateString("content2"));
+				cJSON_AddItemToObject(array10,"example",cJSON_CreateString("content"));
+				//cJSON_AddItemToObject(array10,"example",cJSON_CreateString("content2"));
 				cJSON_AddItemToObject(json,"start",array=cJSON_CreateArray());
 				cJSON_AddItemToObject(array,"start",cJSON_CreateString("start"));
 				cJSON_AddItemToObject(array,"start",cJSON_CreateString("start"));
-				cJSON_AddItemToObject(array,"start",cJSON_CreateString("NULL"));
+				fprintf(file2,"start [shape=ellipse, label=\"start\"];\n");
+				fprintf(file2,"start->");
+				
+				//cJSON_AddItemToObject(array,"start",cJSON_CreateString("NULL"));
 				
 				//pro++;
 				//cJSON *array = NULL;
@@ -603,7 +700,7 @@ int main(void){
 	fclose(fp);
 	//释放json结构所占用的内存
 	cJSON_Delete(json);
-	
+	system("pause");
     return 0;
 }
 

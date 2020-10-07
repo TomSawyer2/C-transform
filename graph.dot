@@ -1,0 +1,21 @@
+digraph {
+edge [fontname="FangSong"];
+node [shape=box, fontname="SimSun" size="20,20"];
+start [shape=ellipse, label="start"];
+start->equal52;
+equal52 [shape=parallelogram, label="a"];
+equal52->equal60
+equal60 [shape=diamond, label="a==1"];
+equal60->equal68
+equal68 [shape=box, label="a++;
+"];
+equal68->equal80
+equal80 [shape=diamond, label="i==1"];
+equal80->equal88
+equal88 [shape=box, label="b++
+"];
+equal88->equal103;
+equal103 [shape=parallelogram, label="b"];
+equal103->end;
+end [shape=ellipse, label="end"];
+}

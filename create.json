@@ -1,16 +1,11 @@
 {
-	"example":	["type", "content1", "content2"],
-	"start":	["start", "start", "NULL"],
-	"process":	["equalint", "a", "0"],
-	"process":	["equalint", "b=à"],
-	"process":	["equalfloat", "a", "0.000000"],
-	"process":	["equalfloat", "b", "10.000000"],
-	"process":	["equaldouble", "a", "0.000000"],
-	"process":	["equaldouble", "b", "1.000000"],
-	"process":	["input", "abc,bcd,cd,dd"],
-	"process":	["input", "abcds"],
+	"example":	["type", "content"],
+	"start":	["start", "start"],
 	"process":	["output", "a"],
-	"process":	["judgecondition", "cd==1"],
-	"process":	["judgetodo", "b++;\n"],
-	"end":	["end", "end", "NULL"]
+	"process":	["judgecondition", "a==1"],
+	"process":	["judgetodo", "a++;\n"],
+	"process":	["judgecondition", "i==1"],
+	"process":	["judgetodo", "b++\n"],
+	"process":	["input", "b"],
+	"end":	["end", "end"]
 }
