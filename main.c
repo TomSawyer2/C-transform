@@ -28,6 +28,7 @@ char number[50];
 int cnt=1;
 int get=0;//0表示未被读取，1表示已被读取 
 int start=0;
+int elseif=0;//0表示没有else if，1表示有else if 
 int main(void){
 	unsigned char pro[100]={0};
 	while(value<100){
@@ -87,7 +88,8 @@ int main(void){
 	char strToken6[]={""};
 	char strToken7[]={""};       
 	char strToken8[]={""};    
-	char strToken9[]={""};      
+	char strToken9[]={""};  
+	char strToken10[]={""};     
 	char strTokenequal[]={""};                                                                         
     for(i=0;i<length;i++){
     	get=0;
@@ -467,6 +469,11 @@ int main(void){
 							}
 							i+=1;
 							while(str[i]!='}'){
+								if(str[i]==';'){
+									i++;
+								}		
+													
+							
 								Concat(getLength(strToken6),strToken6,str[i]);
 								if(str[i-2]==')'){
 									for (unsigned int y = 0;y<strlen(strToken6);y++){
@@ -474,7 +481,7 @@ int main(void){
 									}
 								}
 								i++;
-							}
+					}
 							fprintf(file1,"要做的事      %s\n",strToken6);
 							cJSON_AddItemToObject(json,"process",array13=cJSON_CreateArray());
 							cJSON_AddItemToObject(array13,"process",cJSON_CreateString("judgetodo"));
@@ -485,16 +492,22 @@ int main(void){
 							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken6);
 							//fprintf(file2,"equal%d->",cnt);
 							cnt++;
-							if((str[i+1]=='e'&&str[i+2]=='l'&&str[i+3]=='s'&&str[i+4]=='e')||(str[i+2]=='e'&&str[i+3]=='l'&&str[i+4]=='s'&&str[i+5]=='e')){
+							if(((str[i+1]=='e'&&str[i+2]=='l'&&str[i+3]=='s'&&str[i+4]=='e')||(str[i+2]=='e'&&str[i+3]=='l'&&str[i+4]=='s'&&str[i+5]=='e'))){
+								fprintf(file2,"equal%d->",cnt-2);
+							}else{
 								fprintf(file2,"equal%d->",cnt-2);
 							}
 						}else if(keyword==8){
+							if((str[i]!='i'&&str[i+1]!='f')&&(str[i+1]!='i'&&str[i+2]!='f')&&(str[i+2]!='i'&&str[i+3]!='f')&&(str[i+3]!='i'&&str[i+4]!='f')) {
 							get=1;
 							while(str[i]!='{'){
 								i++;
 							}
 							i++;
 							while(str[i]!='}'){
+								if(str[i]==';'){
+									i++;
+								}
 								Concat(getLength(strToken7),strToken7,str[i]);
 								i++;
 								if(str[i-2]=='{'){
@@ -507,15 +520,89 @@ int main(void){
 							cJSON_AddItemToObject(json,"process",array14=cJSON_CreateArray());
 							cJSON_AddItemToObject(array14,"process",cJSON_CreateString("else"));
 							cJSON_AddItemToObject(array14,"process",cJSON_CreateString(strToken7));
+							if((str[i]!='i'&&str[i+1]!='f')&&(str[i+1]!='i'&&str[i+2]!='f')&&(str[i+2]!='i'&&str[i+3]!='f')&&elseif==0){
+								fprintf(file2,"equal%d[label=\"no\"];\n",cnt);
+								fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken7);
+								cnt++;
+								fprintf(file2,"equal%d,equal%d->",cnt-2,cnt-1);
+							}else if(elseif==1){
+								fprintf(file2,"equal%d->equal%d[label=\"no\"];\n",cnt-2,cnt);
+								fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken7);
+								fprintf(file2,"equal%d,equal%d,equal%d->",cnt-3,cnt-1,cnt);
+								cnt++;
+							}else{
+								fprintf(file2,"equal%d->",cnt-2);
+								cnt++;
+							}
+						}else{//以下为else if的内容，目前只支持一段else if 
+						elseif=1;
+								while(str[i]!='('){
+									i++;
+								}
+								//i++;
+								while(str[i]!=')'){
+									Concat(getLength(strToken10),strToken10,str[i]);
+									if(str[i]=='('){
+										for (unsigned int clear4 = 0;clear4<strlen(strToken10);clear4++){
+										strToken10[clear4] = '\0';
+										}
+									}
+									i++;
+								}
+								fprintf(file1,"条件         %s\n",strToken10);
+								cJSON_AddItemToObject(json,"process",array12=cJSON_CreateArray());
+								cJSON_AddItemToObject(array12,"process",cJSON_CreateString("judgecondition"));
+								cJSON_AddItemToObject(array12,"process",cJSON_CreateString(strToken10));
+								//fprintf(file2,"equal%d;\n",cnt);
+								fprintf(file2,"equal%d[label=\"no\"];\n",cnt);
+								fprintf(file2,"equal%d [shape=diamond, label=\"%s\"];\n",cnt,strToken10);
+								cnt++;
+								fprintf(file2,"equal%d->",cnt-1);
+								//fprintf(file2,"equal%d[label=\"no\"];\n",cnt);
+								//fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken7);
+								//cnt++;
+								//fprintf(file2,"equal%d,equal%d->",cnt-2,cnt-1);
+								for (unsigned int clear5 = 0;clear5<strlen(strToken10);clear5++){
+										strToken10[clear5] = '\0';
+										}
+								while(str[i]!='{'){
+								i++;
+								}
+								i++;
+								while(str[i]!='}'){
+									if(str[i]==';'){
+										i++;
+									}
+									Concat(getLength(strToken10),strToken10,str[i]);
+									i++;
+								if(str[i-2]=='{'){
+									for (unsigned int clear6 = 0;clear6<strlen(strToken10); clear6++){
+									strToken10[clear6] = '\0'; 
+									}
+								}
+								}
+								fprintf(file1,"要做的事         %s\n",strToken10);
+								cJSON_AddItemToObject(json,"process",array13=cJSON_CreateArray());
+								cJSON_AddItemToObject(array13,"process",cJSON_CreateString("judgetodo"));
+								cJSON_AddItemToObject(array13,"process",cJSON_CreateString(strToken10));
+								fprintf(file2,"equal%d[label=\"yes\"];\n",cnt);
+								fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken10);
+								//fprintf(file2,"equal%d,equal%d->",cnt-2,cnt);
+								cnt++;
+								
+									//fprintf(file1,"否则      %s\n",strToken11);
+									//cJSON_AddItemToObject(json,"process",array14=cJSON_CreateArray());
+									//cJSON_AddItemToObject(array14,"process",cJSON_CreateString("else"));
+									//cJSON_AddItemToObject(array14,"process",cJSON_CreateString(strToken11));
+								
+								}
 							//fprintf(file2,"%s->",strToken7);
 							//fprintf(file2,"%s;\n%s->",strToken7,strToken7);
 							//fprintf(file2,"equal%d\n",cnt);
 							//fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken7);
 							//fprintf(file2,"equal%d->",cnt);
-							fprintf(file2,"equal%d[label=\"no\"];\n",cnt);
-							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken7);
-							cnt++;
-							fprintf(file2,"equal%d,equal%d->",cnt-2,cnt-1);
+						
+							
 						}else if(keyword==14){
 							get=1;
 							i++;
@@ -548,6 +635,11 @@ int main(void){
 							i+=1;
 							while(str[i]!='}'){
 								if(str[i]==';'){
+									i++;
+								}else if(str[i]=='/'&&str[i+1]=='/'){
+									while(str[i]!=';'){
+										i++;
+									}
 									i++;
 								}else{
 									Concat(getLength(strToken9),strToken9,str[i]);

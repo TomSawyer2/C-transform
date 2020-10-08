@@ -1,22 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 int main(){
-printf("%d",a);
 int a;
-int b=1;
-a=a+b/c;
 scanf("%d",&a);
+int b,c;
+int d=100;
+float e=5;
+double f;
 if(a==1){
 b++;
-}else{
+d++;
+}else if(cd==1){
 c++;
+}else{
+cd++;
 }
 a=b+c;
-c=c+1;
-while(a==0){
-c++;
-d++;
+while(a==1){
+//break;
+b++;
+//c++;
+a=b%c;
 }
-a++;
+d%c=r;
+/*我是傻逼*/
+abc-def=aqw;//我太难了
 return 0;
 }
