@@ -1,29 +1,13 @@
 #include <stdio.h>
-#include <stdlib.h>
 int main(){
 int a;
+int b=1;
+float c;
+float d=2;
+double e;
+double f=3;
 scanf("%d",&a);
-int b,c;
-int d=100;
-float e=5;
-double f;
-if(a==1){
-b++;
-d++;
-}else if(cd==1){
-c++;
-}else{
-cd++;
-}
-a=b+c;
-while(a==1){
-//break;
-b++;
-//c++;
-a=b%c;
-}
-d%c=r;
-/*我是傻逼*/
-abc-def=aqw;//我太难了
+getchar("%c",&b);
+printf("%d",a);
 return 0;
 }
