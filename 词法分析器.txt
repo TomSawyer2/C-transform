@@ -1,13 +1,29 @@
 #include <stdio.h>
 int main(){
 int a;
-int b=1;
-float c;
-float d=2;
-double e;
-double f=3;
-scanf("%d",&a);
-getchar("%c",&b);
-printf("%d",a);
+float b=10;/*
+
+
+*/
+int c;
+double d;
+c=a+b;
+for(i=1;i<=100;i++){
+c++;
+c--;
+}
+if(c==0){
+b++;
+}else if(c!=0){
+c++;
+}else{
+d--;
+}
+d=c+b;//注释
+while(a<=100){
+
+b++;
+}
+
 return 0;
 }
