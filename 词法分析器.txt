@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 int main(){
-a++;
 printf("%d",a);
+int a;
+int b=1;
 a=a+b/c;
 scanf("%d",&a);
 if(a==1){
@@ -14,6 +15,7 @@ a=b+c;
 c=c+1;
 while(a==0){
 c++;
+d++;
 }
 a++;
 return 0;

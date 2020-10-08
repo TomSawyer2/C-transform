@@ -140,7 +140,7 @@ int main(void){
 						cJSON_AddItemToObject(array2,"process",cJSON_CreateString("output"));
 						cJSON_AddItemToObject(array2,"process",cJSON_CreateString(strToken3));
 						fprintf(file2,"equal%d;\n",cnt);
-						fprintf(file2,"equal%d [shape=parallelogram, label=\"%s\"];\n",cnt,strToken3);
+						fprintf(file2,"equal%d [shape=parallelogram, label=\"output:%s\"];\n",cnt,strToken3);
 						fprintf(file2,"equal%d->",cnt);
 						cnt++;
 					}
@@ -174,7 +174,7 @@ int main(void){
 					cJSON_AddItemToObject(array3,"process",cJSON_CreateString(strToken4));
 					value2++;
 					fprintf(file2,"equal%d;\n",cnt);
-					fprintf(file2,"equal%d [shape=parallelogram, label=\"%s\"];\n",cnt,strToken4);
+					fprintf(file2,"equal%d [shape=parallelogram, label=\"input:%s\"];\n",cnt,strToken4);
 					fprintf(file2,"equal%d->",cnt);
 					cnt++;
 					}
@@ -763,7 +763,10 @@ int main(void){
 	fclose(fp);
 	//释放json结构所占用的内存
 	cJSON_Delete(json);
-	system("pause");
+	system("taskkill /im gvedit.exe");
+	sprintf(cmd,"Start graph.png");
+	system(cmd);
+	//system("pause");
     return 0;
 }
 

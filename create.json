@@ -1,8 +1,9 @@
 {
 	"example":	["type", "content"],
 	"start":	["start", "start"],
-	"process":	["normal", "a++"],
 	"process":	["output", "a"],
+	"process":	["equalint", "a=0"],
+	"process":	["equalint", "b=1"],
 	"process":	["normal", "a=a+b/c"],
 	"process":	["input", "a"],
 	"process":	["judgecondition", "a==1"],
@@ -11,7 +12,7 @@
 	"process":	["normal", "a=b+c"],
 	"process":	["normal", "c=c+1"],
 	"process":	["judgecondition", "a==0"],
-	"process":	["judgetodo", "c++\n"],
+	"process":	["judgetodo", "c++\nd++\n"],
 	"process":	["normal", "a++"],
 	"end":	["end", "end"]
 }
