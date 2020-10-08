@@ -2,20 +2,34 @@ digraph {
 edge [fontname="FangSong"];
 node [shape=box, fontname="SimSun" size="20,20"];
 start [shape=ellipse, label="start"];
-start->equal52;
-equal52 [shape=parallelogram, label="a"];
-equal52->equal60
-equal60 [shape=diamond, label="a==1"];
-equal60->equal68
-equal68 [shape=box, label="a++;
+start->equal1;
+equal1 [shape=box, label="a++"];
+equal1->equal2;
+equal2 [shape=parallelogram, label="a"];
+equal2->equal3;
+equal3 [shape=box, label="a=a+b/c"];
+equal3->equal4;
+equal4 [shape=parallelogram, label="a"];
+equal4->equal5
+equal5 [shape=diamond, label="a==1"];
+equal5->equal6[label="yes"];
+equal6 [shape=box, label="b++;
 "];
-equal68->equal80
-equal80 [shape=diamond, label="i==1"];
-equal80->equal88
-equal88 [shape=box, label="b++
+equal5->equal7[label="no"];
+equal7 [shape=box, label="c++;
 "];
-equal88->equal103;
-equal103 [shape=parallelogram, label="b"];
-equal103->end;
+equal6,equal7->equal8;
+equal8 [shape=box, label="a=b+c"];
+equal8->equal9;
+equal9 [shape=box, label="c=c+1"];
+equal9->equal10
+equal10 [shape=diamond, label="a==0"];
+equal10->equal11
+equal11 [shape=box, label="c++
+"];
+equal11->equal10
+equal10->equal12;
+equal12 [shape=box, label="a++"];
+equal12->end;
 end [shape=ellipse, label="end"];
 }

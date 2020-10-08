@@ -1,11 +1,17 @@
 {
 	"example":	["type", "content"],
 	"start":	["start", "start"],
+	"process":	["normal", "a++"],
 	"process":	["output", "a"],
+	"process":	["normal", "a=a+b/c"],
+	"process":	["input", "a"],
 	"process":	["judgecondition", "a==1"],
-	"process":	["judgetodo", "a++;\n"],
-	"process":	["judgecondition", "i==1"],
-	"process":	["judgetodo", "b++\n"],
-	"process":	["input", "b"],
+	"process":	["judgetodo", "b++;\n"],
+	"process":	["else", "c++;\n"],
+	"process":	["normal", "a=b+c"],
+	"process":	["normal", "c=c+1"],
+	"process":	["judgecondition", "a==0"],
+	"process":	["judgetodo", "c++\n"],
+	"process":	["normal", "a++"],
 	"end":	["end", "end"]
 }

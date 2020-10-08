@@ -25,6 +25,9 @@ int IsDouble=0;//判断是不是赋值，0不是，1是，2是默认为0
 int value;
 int value2=1;
 char number[50]; 
+int cnt=1;
+int get=0;//0表示未被读取，1表示已被读取 
+int start=0;
 int main(void){
 	unsigned char pro[100]={0};
 	while(value<100){
@@ -84,10 +87,11 @@ int main(void){
 	char strToken6[]={""};
 	char strToken7[]={""};       
 	char strToken8[]={""};    
-	char strToken9[]={""};                                                                            
+	char strToken9[]={""};      
+	char strTokenequal[]={""};                                                                         
     for(i=0;i<length;i++){
+    	get=0;
         char strToken[]={""};
-        
         ch=str[i];
         if(ch==' '|| ch=='\n' ||ch=='\t'){
         }
@@ -101,10 +105,11 @@ int main(void){
             int keyword=IsKeyword(strToken);    //判断是否为保留字 
             if(keyword==0){      //为标识符 
                 InsertId(strToken);
-                fprintf(file1,"34   %s\n",strToken);      
+                fprintf(file1,"34   %s\n",strToken);  
             }
             else{//为保留字
 			    if(keyword==4){
+			    	get=1;
 			    	while(str[i]!='"'){
 			    		i++; 
 					}
@@ -134,11 +139,13 @@ int main(void){
 						cJSON_AddItemToObject(json,"process",array2=cJSON_CreateArray());
 						cJSON_AddItemToObject(array2,"process",cJSON_CreateString("output"));
 						cJSON_AddItemToObject(array2,"process",cJSON_CreateString(strToken3));
-						fprintf(file2,"equal%d;\n",i);
-						fprintf(file2,"equal%d [shape=parallelogram, label=\"%s\"];\n",i,strToken3);
-						fprintf(file2,"equal%d->",i);
+						fprintf(file2,"equal%d;\n",cnt);
+						fprintf(file2,"equal%d [shape=parallelogram, label=\"%s\"];\n",cnt,strToken3);
+						fprintf(file2,"equal%d->",cnt);
+						cnt++;
 					}
 				}else if(keyword==5||keyword==6){
+					get=1;
 					while(str[i]!='&'){
 			    		i++;
 					}
@@ -166,11 +173,13 @@ int main(void){
 					cJSON_AddItemToObject(array3,"process",cJSON_CreateString("input"));
 					cJSON_AddItemToObject(array3,"process",cJSON_CreateString(strToken4));
 					value2++;
-					fprintf(file2,"equal%d;\n",i);
-					fprintf(file2,"equal%d [shape=parallelogram, label=\"%s\"];\n",i,strToken4);
-					fprintf(file2,"equal%d->",i);
+					fprintf(file2,"equal%d;\n",cnt);
+					fprintf(file2,"equal%d [shape=parallelogram, label=\"%s\"];\n",cnt,strToken4);
+					fprintf(file2,"equal%d->",cnt);
+					cnt++;
 					}
 				}else if(keyword==10){
+					get=1;
 						while(str[i+1]!='}'){
 							i++;
 						}fprintf(file1,"end      函数结束\n");
@@ -187,6 +196,7 @@ int main(void){
 						//cJSON_AddItemToObject(array9,"end",cJSON_CreateString("NULL"));
 						i++;
 						}else if(keyword==1){//判断int
+						get=1;
 						i=i+1; 
 							int j1=i;
 							for(j1;str[j1]!=';';j1++){
@@ -222,9 +232,10 @@ int main(void){
 										cJSON_AddItemToObject(json,"process",array5=cJSON_CreateArray());
 										cJSON_AddItemToObject(array5,"process",cJSON_CreateString("equalint"));
 										
-										fprintf(file2,"equal%d\n",i);
-										fprintf(file2,"equal%d [shape=box, label=\"%s=%d\"];\n",i,strToken2,num);
-										fprintf(file2,"equal%d->",i);
+										fprintf(file2,"equal%d\n",cnt);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=%d\"];\n",cnt,strToken2,num);
+										fprintf(file2,"equal%d->",cnt);
+										cnt++;
 										//cJSON_AddItemToObject(array5,"process",cJSON_CreateString(strToken2));
 										//Concat(getLength(strToken2),strToken2,'=');
 										//sprintf(number, "%d", num);
@@ -247,9 +258,10 @@ int main(void){
 										cJSON_AddItemToObject(array4,"process",cJSON_CreateString("equalint"));
 										//fprintf(file2,"%s->",strToken2);
 										
-										fprintf(file2,"equal%d\n",i);
-										fprintf(file2,"equal%d [shape=box, label=\"%s=0\"];\n",i,strToken2,num);
-										fprintf(file2,"equal%d->",i);
+										fprintf(file2,"equal%d\n",cnt);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=0\"];\n",cnt,strToken2,num);
+										fprintf(file2,"equal%d->",cnt);
+										cnt++;
 										//cJSON_AddItemToObject(array4,"process",cJSON_CreateString(strToken2));
 										//cJSON_AddItemToObject(array4,"process",cJSON_CreateString("0"));
 										sprintf(number, "%s=%d",strToken2,0);
@@ -266,6 +278,7 @@ int main(void){
 								}
 							}
 						}else if(keyword==2){//判断float
+						get=1;
 						i=i+1; 
 						float num2=0.000000;
 							int j2=i;
@@ -303,9 +316,10 @@ int main(void){
 										cJSON_AddItemToObject(array7,"process",cJSON_CreateString("equalfloat"));
 										//fprintf(file2,"%s->",strToken2);
 										
-										fprintf(file2,"equal%d\n",i);
-										fprintf(file2,"equal%d [shape=box, label=\"%s=%f\"];\n",i,strToken2,num2);
-										fprintf(file2,"equal%d->",i);
+										fprintf(file2,"equal%d\n",cnt);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=%f\"];\n",cnt,strToken2,num2);
+										fprintf(file2,"equal%d->",cnt);
+										cnt++;
 										//cJSON_AddItemToObject(array7,"process",cJSON_CreateString(strToken2));
 										//sprintf(number, "%.6lf", num2);
 										//cJSON_AddItemToObject(array7,"process",cJSON_CreateString(number));
@@ -325,9 +339,10 @@ int main(void){
 										cJSON_AddItemToObject(json,"process",array6=cJSON_CreateArray());
 										cJSON_AddItemToObject(array6,"process",cJSON_CreateString("equalfloat"));
 										//fprintf(file2,"%s->",strToken2);
-										fprintf(file2,"equal%d\n",i);
-										fprintf(file2,"equal%d [shape=box, label=\"%s=0.000000\"];\n",i,strToken2);
-										fprintf(file2,"equal%d->",i);
+										fprintf(file2,"equal%d\n",cnt);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=0.000000\"];\n",cnt,strToken2);
+										fprintf(file2,"equal%d->",cnt);
+										cnt++;
 										//cJSON_AddItemToObject(array6,"process",cJSON_CreateString(strToken2));
 										//cJSON_AddItemToObject(array6,"process",cJSON_CreateString("0.000000"));
 										sprintf(number, "%s=%f",strToken2,0.000000);
@@ -343,6 +358,7 @@ int main(void){
 								}
 							}
 						}else if(keyword==3){//判断double
+						get=1;
 						i=i+1; 
 						double num3=0.000000;
 							int j3=i;
@@ -380,9 +396,10 @@ int main(void){
 										cJSON_AddItemToObject(json,"process",array11=cJSON_CreateArray());
 										cJSON_AddItemToObject(array11,"process",cJSON_CreateString("equaldouble"));
 										//fprintf(file2,"%s->",strToken2);
-										fprintf(file2,"equal%d\n",i);
-										fprintf(file2,"equal%d [shape=box, label=\"%s=%f\"];\n",i,strToken2,num3);
-										fprintf(file2,"equal%d->",i);
+										fprintf(file2,"equal%d\n",cnt);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=%f\"];\n",cnt,strToken2,num3);
+										fprintf(file2,"equal%d->",cnt);
+										cnt++;
 										//cJSON_AddItemToObject(array11,"process",cJSON_CreateString(strToken2));
 										//sprintf(number, "%.6lf", num3);
 										//cJSON_AddItemToObject(array11,"process",cJSON_CreateString(number));
@@ -402,9 +419,10 @@ int main(void){
 										cJSON_AddItemToObject(json,"process",array8=cJSON_CreateArray());
 										cJSON_AddItemToObject(array8,"process",cJSON_CreateString("equaldouble"));
 										//fprintf(file2,"%s->",strToken2);
-										fprintf(file2,"equal%d\n",i);
-										fprintf(file2,"equal%d [shape=box, label=\"%s=0.000000\"];\n",i,strToken2);
-										fprintf(file2,"equal%d->",i);
+										fprintf(file2,"equal%d\n",cnt);
+										fprintf(file2,"equal%d [shape=box, label=\"%s=0.000000\"];\n",cnt,strToken2);
+										fprintf(file2,"equal%d->",cnt);
+										cnt++;
 										//cJSON_AddItemToObject(array8,"process",cJSON_CreateString(strToken2));
 										//cJSON_AddItemToObject(array8,"process",cJSON_CreateString("0.000000"));
 										sprintf(number, "%s=%f",strToken2,0.000000);
@@ -422,6 +440,7 @@ int main(void){
 							}
 							
 						}else if(keyword==13){
+							get=1;
 							i++;
 							while(str[i]!=')'){
 								Concat(getLength(strToken5),strToken5,str[i]);
@@ -439,17 +458,16 @@ int main(void){
 							cJSON_AddItemToObject(array12,"process",cJSON_CreateString(strToken5));
 							//fprintf(file2,"%s->",strToken5);
 							//fprintf(file2,"%s;\n%s->",strToken5,strToken5);
-							fprintf(file2,"equal%d\n",i);
-							fprintf(file2,"equal%d [shape=diamond, label=\"%s\"];\n",i,strToken5);
-							fprintf(file2,"equal%d->",i);
+							fprintf(file2,"equal%d\n",cnt);
+							fprintf(file2,"equal%d [shape=diamond, label=\"%s\"];\n",cnt,strToken5);
+							fprintf(file2,"equal%d->",cnt);
+							cnt++;
 							while(str[i]!='{'){
 								i++;
 							}
 							i+=1;
 							while(str[i]!='}'){
-								
 								Concat(getLength(strToken6),strToken6,str[i]);
-								
 								if(str[i-2]==')'){
 									for (unsigned int y = 0;y<strlen(strToken6);y++){
 									strToken6[y] = '\0';
@@ -463,10 +481,15 @@ int main(void){
 							cJSON_AddItemToObject(array13,"process",cJSON_CreateString(strToken6));
 							//fprintf(file2,"%s->",strToken6);
 							//fprintf(file2,"%s;\n%s->",strToken6,strToken6);
-							fprintf(file2,"equal%d\n",i);
-							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",i,strToken6);
-							fprintf(file2,"equal%d->",i);
+							fprintf(file2,"equal%d[label=\"yes\"];\n",cnt);
+							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken6);
+							//fprintf(file2,"equal%d->",cnt);
+							cnt++;
+							if((str[i+1]=='e'&&str[i+2]=='l'&&str[i+3]=='s'&&str[i+4]=='e')||(str[i+2]=='e'&&str[i+3]=='l'&&str[i+4]=='s'&&str[i+5]=='e')){
+								fprintf(file2,"equal%d->",cnt-2);
+							}
 						}else if(keyword==8){
+							get=1;
 							while(str[i]!='{'){
 								i++;
 							}
@@ -486,10 +509,15 @@ int main(void){
 							cJSON_AddItemToObject(array14,"process",cJSON_CreateString(strToken7));
 							//fprintf(file2,"%s->",strToken7);
 							//fprintf(file2,"%s;\n%s->",strToken7,strToken7);
-							fprintf(file2,"equal%d\n",i);
-							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",i,strToken7);
-							fprintf(file2,"equal%d->",i);
+							//fprintf(file2,"equal%d\n",cnt);
+							//fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken7);
+							//fprintf(file2,"equal%d->",cnt);
+							fprintf(file2,"equal%d[label=\"no\"];\n",cnt);
+							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken7);
+							cnt++;
+							fprintf(file2,"equal%d,equal%d->",cnt-2,cnt-1);
 						}else if(keyword==14){
+							get=1;
 							i++;
 							while(str[i]!=')'){
 								Concat(getLength(strToken8),strToken8,str[i]);
@@ -507,9 +535,10 @@ int main(void){
 							cJSON_AddItemToObject(array15,"process",cJSON_CreateString(strToken8));
 							//fprintf(file2,"%s->",strToken8);
 							//fprintf(file2,"%s;\n%s->",strToken8,strToken8);
-							fprintf(file2,"equal%d\n",i);
-							fprintf(file2,"equal%d [shape=diamond, label=\"%s\"];\n",i,strToken8);
-							fprintf(file2,"equal%d->",i);
+							fprintf(file2,"equal%d\n",cnt);
+							fprintf(file2,"equal%d [shape=diamond, label=\"%s\"];\n",cnt,strToken8);
+							fprintf(file2,"equal%d->",cnt);
+							cnt++;
 							//cJSON_AddItemToObject(obj,"judgecon",cJSON_CreateString(strToken5));
 							//cJSON_AddItemToObject(obj,"judgecon",cJSON_CreateString(strToken5));
 							//pro++;
@@ -539,9 +568,12 @@ int main(void){
 							cJSON_AddItemToObject(array16,"process",cJSON_CreateString(strToken9));
 							//fprintf(file2,"%s->",strToken9);
 							//fprintf(file2,"%s;\n%s->",strToken9,strToken9);
-							fprintf(file2,"equal%d\n",i);
-							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",i,strToken9);
-							fprintf(file2,"equal%d->",i);
+							fprintf(file2,"equal%d\n",cnt);
+							//fprintf(file2,"equal%d[label=\"yes\"];\n",cnt);
+							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken9);
+							fprintf(file2,"equal%d->equal%d\n",cnt,cnt-1);
+							fprintf(file2,"equal%d->",cnt-1);
+							cnt++;
 						}else{
 							fprintf(file1,"%d    %s\n",keyword,strToken);
 						}
@@ -551,7 +583,7 @@ int main(void){
         	//fprintf(file1,"35      %c%c\n",str[i],str[i+1]);
         	i+=2; 
 		}
-        else if(IsDigit(ch)){   //为数字 
+        else if(IsDigit(ch)){//为数字 
             while(IsDigit(ch)){
                 Concat(getLength(strToken),strToken,ch);
                 i=i+1;
@@ -581,8 +613,38 @@ int main(void){
                 i--;
             } 
         }
-        else if(ch==';'){
-            fprintf(file1,"%d    ;\n",IsDelimiter(ch));
+        else if(str[i]==';'){
+        	while(str[i-1]!=';'&&str[i-1]!='\n'){
+        		//for (unsigned int clear3 = 0;clear3<strlen(strTokenequal);clear3++){
+				//strTokenequal[clear3] = '\0';
+				//}
+        		i--;
+			}
+			//i++;
+			for (unsigned int clear3 = 0;clear3<strlen(strTokenequal);clear3++){
+				strTokenequal[clear3] = '\0';
+				}
+			while(str[i]!=';'){
+					Concat(getLength(strTokenequal),strTokenequal,str[i]);
+					if(get==1){
+					for (unsigned int clear4 = 0;clear4<strlen(strTokenequal);clear4++){
+						strTokenequal[clear4] = '\0';
+						i++;
+						}
+					}else{
+						i++;
+					}
+				}
+			i+=1;
+			cJSON_AddItemToObject(json,"process",array17=cJSON_CreateArray());
+			cJSON_AddItemToObject(array17,"process",cJSON_CreateString("normal"));
+			cJSON_AddItemToObject(array17,"process",cJSON_CreateString(strTokenequal));
+			fprintf(file1,"%s    ;\n",strTokenequal);
+			fprintf(file2,"equal%d;\n",cnt);
+			fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strTokenequal);
+			fprintf(file2,"equal%d->",cnt);
+			cnt++;
+            //fprintf(file1,"%d    ;\n",IsDelimiter(ch));
         }
         else if(ch=='('){
         	if(str[i+1]==')'){
@@ -619,11 +681,12 @@ int main(void){
             fprintf(file1,"%d    <\n",IsDelimiter(ch));
         }
         else if(ch=='#'){
-        	if(str[i+1]=='i'&&str[i+2]=='n'){
+        	if(str[i+1]=='i'&&str[i+2]=='n'&&start==0){
         		while(str[i+1]!='>'){
         		i++;
 				}
 				i++;
+				start=1;
 				fprintf(file1,"start            开始\n");
 				//cJSON_AddItemToObject(json,"start",cJSON_CreateString("pro=="));
 				cJSON_AddItemToObject(json,"example",array10=cJSON_CreateArray());
