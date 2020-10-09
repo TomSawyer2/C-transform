@@ -99,6 +99,7 @@ int main(void){
 	char strToken12[]={""};//for2
 	char strToken13[]={""};//for3
 	char strToken14[]={""};//fortodo
+	char strToken15[]={""};//char
 	char strTokenequal[]={""};                                                                         
     for(i=0;i<length;i++){
     	get=0;
@@ -758,6 +759,26 @@ int main(void){
 							fprintf(file2,"equal%d->equal%d\n",cnt,cnt-1);
 							fprintf(file2,"equal%d->",cnt-1);
 							cnt++;
+						}else if(keyword==9){
+							while(str[i]!=';'){
+								Concat(getLength(strToken15),strToken15,str[i]);
+								if((str[i]=='r'&&str[i-1]=='a'&&str[i-2]=='h'&&str[i-3]=='c')||(str[i-1]=='r'&&str[i-2]=='a'&&str[i-3]=='h'&&str[i-4]=='c')){
+									for (unsigned int clear11 = 0;clear11<strlen(strToken15);clear11++){
+									strToken15[clear11] = '\0';
+									}
+								}
+								//for (unsigned int clear11 = 0;clear11<strlen(strToken15);clear11++){
+									//strToken15[clear11] = '\0';
+								//	}
+								i++;
+							}
+							fprintf(file2,"equal%d\n",cnt);
+							//fprintf(file2,"equal%d[label=\"yes\"];\n",cnt);
+							fprintf(file2,"equal%d [shape=box, label=\"%s\"];\n",cnt,strToken15);
+							//fprintf(file2,"equal%d->equal%d\n",cnt,cnt-1);
+							fprintf(file2,"equal%d->",cnt);
+							cnt++;
+							
 						}else{
 							fprintf(file1,"%d    %s\n",keyword,strToken);
 						}

@@ -3,47 +3,50 @@ edge [fontname="FangSong"];
 node [shape=box, fontname="SimSun" size="20,20"];
 start [shape=ellipse, label="start"];
 start->equal1
-equal1 [shape=box, label="a=0"];
+equal1 [shape=box, label="num[]={0}"];
 equal1->equal2
-equal2 [shape=box, label="c=0"];
-equal2->equal3
-equal3 [shape=box, label="d=0.000000"];
-equal3->equal4;
-equal4 [shape=box, label="c=a+b"];
-equal4->equal5;
-equal5 [shape=box, label="i=1"];
-equal5->equal6;
-equal6 [shape=diamond, label="i<=100"];
-equal6->equal7;
-equal7 [shape=box, label="i++"];
-equal7->equal8;
-equal8 [shape=box, label="
-c++
-c--
-"];
-equal8->equal6;
-equal6->equal9
-equal9 [shape=diamond, label="c==0"];
+equal2 [shape=box, label="a=0"];
+equal2->equal3;
+equal3 [shape=parallelogram, label="input:a"];
+equal3->equal4
+equal4 [shape=box, label="b=0"];
+equal4->equal5
+equal5 [shape=box, label="c=0"];
+equal5->equal6
+equal6 [shape=box, label="d=100"];
+equal6->equal7
+equal7 [shape=box, label="e=5.000000"];
+equal7->equal8
+equal8 [shape=box, label="f=0.000000"];
+equal8->equal9
+equal9 [shape=diamond, label="a==1"];
 equal9->equal10[label="yes"];
 equal10 [shape=box, label="b++
+d++
 "];
 equal9->equal11[label="no"];
-equal11 [shape=diamond, label="c!=0"];
+equal11 [shape=diamond, label="c==1"];
 equal11->equal12[label="yes"];
 equal12 [shape=box, label="c++
 "];
 equal11->equal13[label="no"];
-equal13 [shape=box, label="d--
+equal13 [shape=box, label="d++
 "];
 equal10,equal12,equal13->equal14;
-equal14 [shape=box, label="d=c+b"];
+equal14 [shape=box, label="a=b+c"];
 equal14->equal15
-equal15 [shape=diamond, label="a<=100"];
+equal15 [shape=diamond, label="a==1"];
 equal15->equal16
-equal16 [shape=box, label="
-b++
+equal16 [shape=box, label="b++
+
+a=b%c
+break
 "];
 equal16->equal15
-equal15->end;
+equal15->equal17;
+equal17 [shape=box, label="d%c=r"];
+equal17->equal18;
+equal18 [shape=box, label="a=a-d"];
+equal18->end;
 end [shape=ellipse, label="end"];
 }
